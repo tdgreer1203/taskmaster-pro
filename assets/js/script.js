@@ -87,7 +87,22 @@ $(".list-group").on("blur", "input[type='text']", function() {
 });
 
 $(".card .list-group").sortable({
-  connectWith: $(".card .list-group")
+  connectWith: $(".card .list-group"),
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
+  activate: function(event) {
+    console.log("activate", this);
+  },
+  deactivate: function(event) {
+    console.log("deactivate", this);
+  },
+  out: function(event) {
+    console.log("out", event.target);
+  },
+  update: function(event) {
+    console.log("update", this);
+  }
 });
 
 // modal was triggered
