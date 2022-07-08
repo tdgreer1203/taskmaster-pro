@@ -92,16 +92,29 @@ $(".card .list-group").sortable({
   tolerance: "pointer",
   helper: "clone",
   activate: function(event) {
-    console.log("activate", this);
+    
   },
   deactivate: function(event) {
-    console.log("deactivate", this);
+    
   },
   out: function(event) {
-    console.log("out", event.target);
+
   },
   update: function(event) {
-    console.log("update", this);
+    var tempArr = [];
+
+    $(this).children().each(function() {
+      var text = $(this).find("p").text().trim();
+      var date = $(this).find("span").text().trim();
+
+      tempArr.push({text: text, date: date});
+    });
+
+    var arrName = $(this).attr("id").replace("list-", "");
+
+    tasks[arrName] = tempArr;
+
+    saveTasks();
   }
 });
 
