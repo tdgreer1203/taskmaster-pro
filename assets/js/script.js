@@ -86,6 +86,8 @@ $(".list-group").on("blur", "input[type='text']", function() {
   $(this).replaceWith(taskSpan);
 });
 
+$("#modalDueDate").datepicker();
+
 // modal was triggered
 $("#task-form-modal").on("show.bs.modal", function() {
   // clear values
