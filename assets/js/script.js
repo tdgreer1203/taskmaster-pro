@@ -13,6 +13,8 @@ var createTask = function(taskText, taskDate, taskList) {
   // append span and p element to parent li
   taskLi.append(taskSpan, taskP);
 
+  auditTask(taskLi);
+
   // append to ul list on the page
   $("#list-" + taskList).append(taskLi);
 };
@@ -102,9 +104,7 @@ $("#trash").droppable({
   accept: ".card .list-group-item",
   tolerance: "touch",
   drop: function(event, ui) {
-    // remove dragged element from the dom
     ui.draggable.remove();
-
   },
   over: function(event, ui) {
     console.log(ui);
@@ -165,7 +165,7 @@ $(".list-group").on("click", "p", function() {
 });
 
 // editable field was un-focused
-$(".list-group").on("blur", "textarea", function() {
+$(".list-group").on("change", "input[type='text']", function() {
   // get current value of textarea
   var text = $(this).val();
 
@@ -179,16 +179,19 @@ $(".list-group").on("blur", "textarea", function() {
     .index();
 
   // update task in array and re-save to localstorage
-  tasks[status][index].text = text;
+  tasks[status][index].date = date;
   saveTasks();
 
   // recreate p element
-  var taskP = $("<p>")
-    .addClass("m-1")
-    .text(text);
+  var taskSpan = $("<span>")
+    .addClass("bagde badge-primary bage-pill")
+    .text(date);
 
   // replace textarea with new content
-  $(this).replaceWith(taskP);
+  $(this).replaceWith(taskSpan);
+
+  // Pass task's <li> element into auditTask() to check new due date
+  auditTask($(taskSpan).closest(".list-group-item"));
 });
 
 // due date was clicked
@@ -205,9 +208,31 @@ $(".list-group").on("click", "span", function() {
     .val(date);
   $(this).replaceWith(dateInput);
 
+  dateInput.datepicker({
+    minDate: 1,
+    onClose: function() {
+      $(this).trigger("change");
+    }
+  });
+
   // automatically bring up the calendar
   dateInput.trigger("focus");
 });
+
+$('#modalDueDate').datepicker({ minDate: 1});
+
+var auditTask = function(taskEl) {
+  var date = $(taskEl).find("span").text().trim();
+  var time = moment(date, "L").set("hour", 17);
+  $(taskEl).removeClass("list-group-item-warning list-group-item-danger");
+
+  if(moment().isAfter(time)) {
+    $(taskEl).addClass("list-group-item-danger");
+  }
+  else if (Math.abs(moment().diff(time, "days")) <= 2) {
+    $(taskEl).addClass("list-group-item-warning");
+  }
+};
 
 // value of due date was changed
 $(".list-group").on("change", "input[type='text']", function() {
