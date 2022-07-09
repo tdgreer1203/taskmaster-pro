@@ -118,6 +118,21 @@ $(".card .list-group").sortable({
   }
 });
 
+$("#trash").droppable({
+  tolerance: "touch",
+  accept: ".card .list-group-item",
+  drop: function(event, ui) {
+    console.log("drop");
+    ui.draggable.remove();
+  }, 
+  over: function(event, ui) {
+    console.log("over");
+  }, 
+  out: function(event, ui) {
+    console.log("out");
+  }
+});
+
 // modal was triggered
 $("#task-form-modal").on("show.bs.modal", function() {
   // clear values
