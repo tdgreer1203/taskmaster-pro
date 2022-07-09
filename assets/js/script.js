@@ -2,6 +2,9 @@ var tasks = {};
 
 var createTask = function(taskText, taskDate, taskList) {
   // create elements that make up a task item
+  //This is creating the elements and adding the class to them upon creation. 
+  //In the case of the <span> and <p> tags, it is also setting the content..
+  //The program then appends the span and the p to the li
   var taskLi = $("<li>").addClass("list-group-item");
   var taskSpan = $("<span>")
     .addClass("badge badge-primary badge-pill")
@@ -13,7 +16,6 @@ var createTask = function(taskText, taskDate, taskList) {
   // append span and p element to parent li
   taskLi.append(taskSpan, taskP);
 
-  // check due date
   auditTask(taskLi);
 
   // append to ul list on the page
